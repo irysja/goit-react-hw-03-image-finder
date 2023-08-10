@@ -5,7 +5,7 @@ import Loader from './Loader';
 import Button from './Button';
 import Modal from './Modal';
 import { fetchImages } from './api'; 
-import styles from './styles.css'
+//import styles from './styles.css';
 
 class App extends Component {
   state = {
