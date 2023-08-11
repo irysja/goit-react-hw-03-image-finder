@@ -1,20 +1,25 @@
+
 import React, { Component } from 'react';
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
 import Loader from './Loader';
 import Button from './Button';
 import Modal from './Modal';
-import { fetchImages } from './api'; 
-//import styles from './styles.css';
+import { fetchImages } from './api';
+import './styles.css';
 
 class App extends Component {
   state = {
-    images: [],
+    images: {
+      hits: [],
+      total: 0,
+    },
     query: '',
     page: 1,
     isLoading: false,
     showModal: false,
     selectedImage: '',
+    showButton: true, // Добавляем новое состояние для показа кнопки
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -24,7 +29,7 @@ class App extends Component {
   }
 
   handleSearchSubmit = (query) => {
-    this.setState({ query, images: [], page: 1 });
+    this.setState({ query, images: { hits: [], total: 0 }, page: 1 });
   };
 
   handleLoadMore = () => {
@@ -46,9 +51,12 @@ class App extends Component {
     this.setState({ isLoading: true });
 
     try {
-      const images = await fetchImages(query, page); 
+      const { hits, total } = await fetchImages(query, page);
       this.setState((prevState) => ({
-        images: [...prevState.images, ...images],
+        images: {
+          hits: [...prevState.images.hits, ...hits],
+          total,
+        },
       }));
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -62,14 +70,20 @@ class App extends Component {
   };
 
   render() {
-    const { images, isLoading, showModal, selectedImage } = this.state;
+    const { images, isLoading, showModal, selectedImage, showButton } = this.state;
 
     return (
       <div className="App">
         <Searchbar onSubmit={this.handleSearchSubmit} />
-        <ImageGallery images={images} onClick={this.handleImageClick} />
+        <ImageGallery images={images.hits} onClick={this.handleImageClick} />
         {isLoading && <Loader />}
-        {images.length > 0 && !isLoading && <Button onClick={this.handleLoadMore} />}
+        {/* Используем условие для отображения Button */}
+        {images.hits.length > 0 && !isLoading && showButton && (
+          <Button
+            onClick={this.handleLoadMore}
+            isLastPage={images.hits.length >= images.total}
+          />
+        )}
         {showModal && <Modal largeImageURL={selectedImage} onClose={this.handleCloseModal} />}
       </div>
     );
@@ -77,4 +91,7 @@ class App extends Component {
 }
 
 export default App;
+
+
+
 
