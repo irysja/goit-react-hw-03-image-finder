@@ -50,13 +50,21 @@ class App extends Component {
 
     this.setState({ isLoading: true });
 
-    try {
+    /*try {
       const { hits, total } = await fetchImages(query, page);
       this.setState((prevState) => ({
         images: {
           hits: [...prevState.images.hits, ...hits],
           total,
-        },
+        },*/
+        try {
+          const { hits, totalHits:total } = await fetchImages(query, page);
+          this.setState((prevState) => ({
+            images: {
+              hits: [...prevState.images.hits, ...hits],
+              total,
+              showButton: page<Math.ceil(total/12)
+            },
       }));
     } catch (error) {
       console.error('Error fetching images:', error);
