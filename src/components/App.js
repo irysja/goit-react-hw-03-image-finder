@@ -45,8 +45,35 @@ class App extends Component {
   handleCloseModal = () => {
     this.setState({ selectedImage: '', showModal: false });
   };
-
+  
   fetchImages = async () => {
+    const { query, page } = this.state;
+    if (query === '') return;
+  
+    this.setState({ isLoading: true });
+    try {
+      const { hits, totalHits } = await fetchImages(query, page);
+      this.setState(prevState => ({
+        images: {
+          hits: [...prevState.images.hits, ...hits],
+          total: totalHits,
+          //showButton: page < Math.ceil(totalHits / 12),
+        },
+        isLoading: false,
+      }));
+      
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      this.setState({ isLoading: false });
+    }
+  };
+  
+   
+  /*fetchImages = async () => {
     const { query, page } = this.state;
     if (query === '') return;
 
@@ -67,11 +94,12 @@ class App extends Component {
     try {
       const { hits, totalHits: total } = await fetchImages(query, page);
       this.setState(prevState => ({
-        images: {
+        //images: {
           hits: [...prevState.images.hits, ...hits],
           total,
-          showButton: page < Math.ceil(total / 12),
-        },
+          //showButton: page < Math.ceil(total / 12),
+       // },
+        showButton: page < Math.ceil(total / 12),
       }));
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -82,7 +110,7 @@ class App extends Component {
         behavior: 'smooth',
       });
     }
-  };
+  };*/
 
   render() {
     const { images, isLoading, showModal, selectedImage, showButton } =
