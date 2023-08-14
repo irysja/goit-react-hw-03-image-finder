@@ -18,3 +18,7 @@ const ImageGallery = ({ images, onClick }) => (
 
 export default ImageGallery;
 
+
+
+
+

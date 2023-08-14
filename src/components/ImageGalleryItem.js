@@ -14,3 +14,7 @@ const ImageGalleryItem = ({ src, alt, onClick, largeImage }) => (
 
 export default ImageGalleryItem;
 
+
+
+
+
