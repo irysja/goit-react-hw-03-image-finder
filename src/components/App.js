@@ -59,6 +59,7 @@ class App extends Component {
           total: totalHits,
           //showButton: page < Math.ceil(totalHits / 12),
         },
+        showButton: page < Math.ceil(totalHits / 12),
         isLoading: false,
       }));
       
