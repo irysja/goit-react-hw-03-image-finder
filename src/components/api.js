@@ -39,7 +39,8 @@ const fetchImages = async (query, page = 1) => {
 
   const data = await response.json();
   return {
-    total: data.total,
+    totalHits: data.totalHits,
+    //total: data.total,
     hits: data.hits.map((hit) => ({
       id: hit.id,
       webformatURL: hit.webformatURL,
